@@ -5,6 +5,11 @@ import {
 import { enforceOptInRateLimit, openAiRateLimiter } from './rate-limit.js';
 import { readRequestBody } from '../common/request.js';
 import { OPENAI_HUD_SUMMARY_MODEL_DEFAULT } from './constants.js';
+import {
+  vestaChatRequest,
+  vestaChatText,
+  vestaLlmConfig,
+} from './vesta-llm.js';
 
 function extractOpenAiResponseText(data) {
   if (typeof data?.output_text === 'string' && data.output_text.trim()) {
@@ -36,7 +41,9 @@ async function handleHudSummary(req, res) {
     return;
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  // vesta recon: vesta's gateway (LiteLLM) replaces OpenAI when it is set.
+  const vesta = vestaLlmConfig();
+  const apiKey = vesta ? vesta.apiKey : process.env.OPENAI_API_KEY;
   const keyless = keylessHudSummaryResponse(apiKey);
   if (keyless) {
     res.statusCode = keyless.statusCode;
@@ -54,24 +61,38 @@ async function handleHudSummary(req, res) {
   try {
     const body = await readRequestBody(req, 64 * 1024);
     const context = JSON.parse(body || '{}');
-    const response = await fetch('https://api.openai.com/v1/responses', {
+    // vesta recon: on the gateway the summary is a Chat Completions call with
+    // thinking off; OpenAI keeps its Responses call.
+    const request = vesta
+      ? vestaChatRequest(vesta, {
+          system: HUD_SUMMARY_INSTRUCTIONS,
+          user: JSON.stringify(context),
+          maxTokens: 60,
+        })
+      : {
+          url: 'https://api.openai.com/v1/responses',
+          body: {
+            model:
+              process.env.OPENAI_HUD_SUMMARY_MODEL ||
+              OPENAI_HUD_SUMMARY_MODEL_DEFAULT,
+            instructions: HUD_SUMMARY_INSTRUCTIONS,
+            input: JSON.stringify(context),
+            reasoning: { effort: 'minimal' },
+            max_output_tokens: 100,
+          },
+        };
+    const response = await fetch(request.url, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model:
-          process.env.OPENAI_HUD_SUMMARY_MODEL ||
-          OPENAI_HUD_SUMMARY_MODEL_DEFAULT,
-        instructions: HUD_SUMMARY_INSTRUCTIONS,
-        input: JSON.stringify(context),
-        reasoning: { effort: 'minimal' },
-        max_output_tokens: 100,
-      }),
+      body: JSON.stringify(request.body),
     });
     const data = await response.json().catch(() => ({}));
-    const summary = toFiveWordHudSummary(extractOpenAiResponseText(data));
+    const summary = toFiveWordHudSummary(
+      vesta ? vestaChatText(data) : extractOpenAiResponseText(data),
+    );
     res.statusCode = response.ok && summary ? 200 : response.status || 502;
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Cache-Control', 'no-store');
