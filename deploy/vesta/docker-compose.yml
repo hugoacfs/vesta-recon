@@ -1,0 +1,25 @@
+services:
+  gods-eye-view:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gods-eye-view:local
+    container_name: gods-eye-view
+    # Keys live in .env (server-side + client-baked). HOST/PORT are infra and
+    # set here so an .env edit can't accidentally unset them. HOST=0.0.0.0 is
+    # the CONTAINER namespace only — the published port below is loopback-only,
+    # and external reach is via tailnet Tailscale Serve. HOST=0.0.0.0 also flips
+    # the app's allowedHosts to `true`, so it accepts the tailnet Host header.
+    env_file:
+      - ./.env
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8096"
+    ports:
+      # Loopback bind ONLY — container-published ports bypass ufw on vesta, so
+      # never expose to 0.0.0.0 on the host. Reached via `tailscale serve :8600`.
+      - "127.0.0.1:8096:8096"
+    init: true
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"

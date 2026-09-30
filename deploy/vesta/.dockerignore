@@ -1,0 +1,10 @@
+# Keep the build context small and keep secrets out of the image.
+.env
+teardown.sh
+README.md
+*.log
+app/.git
+app/node_modules
+app/dist
+app/**/*.bak*
+app/**/*.broken*
