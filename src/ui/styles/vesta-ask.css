@@ -1,0 +1,73 @@
+/* vesta recon: the "Ask vesta recon" box, floating above the command dock
+   (src/vesta/ask.js sets --vesta-ask-bottom to keep it clear of the dock, the
+   credits and the HUD readouts). */
+.vesta-ask {
+  position: fixed;
+  left: 50%;
+  bottom: var(--vesta-ask-bottom, 110px);
+  transform: translateX(-50%);
+  z-index: 40;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  width: min(520px, calc(100vw - 32px));
+  font-family: var(--font-sans);
+}
+
+.vesta-ask-input,
+.vesta-ask-send {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--btn-radius);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.vesta-ask-input {
+  min-width: 0;
+  padding: 9px 12px;
+  font: 13px/1.3 var(--font-sans);
+}
+
+.vesta-ask-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.vesta-ask-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-dim);
+}
+
+.vesta-ask-send {
+  padding: 0 12px;
+  cursor: pointer;
+  font: 14px/1 var(--font-mono);
+}
+
+.vesta-ask-send:hover {
+  border-color: var(--glass-border-hover);
+}
+
+.vesta-ask-reply {
+  grid-column: 1 / -1;
+  padding: 0 4px;
+  color: var(--text-primary);
+  font: 12px/1.4 var(--font-sans);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.vesta-ask-reply:empty {
+  display: none;
+}
+
+.vesta-ask[data-state='busy'] .vesta-ask-input {
+  opacity: 0.6;
+}
+
+/* Hidden with the dock in clean view and while recording. */
+body.ui-clean-view .vesta-ask,
+body.recording-mode .vesta-ask {
+  display: none;
+}

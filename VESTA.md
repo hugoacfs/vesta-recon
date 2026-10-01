@@ -33,9 +33,23 @@ cd /srv/ai/compose/gods-eye-view && docker compose up -d --build
 
 ## Plan
 
-1. LLM on the box: HUD summaries and typed commands through LiteLLM.
+1. LLM on the box: HUD summaries and typed commands through LiteLLM. **Done 2026-10-01** (below).
 2. Voice through vesta-voice: a "globe" profile whose map actions run in this page.
 3. The Vesta look and the name, **vesta recon**.
+
+## What the fork adds so far
+
+- **HUD summaries on Qwen.** `server/providers/openai/vesta-llm.js` and a small seam in
+  `hud-summary.js`: with `VESTA_LLM_BASE_URL` set, the five-word summary comes from the gateway's
+  Chat Completions with thinking off (about 0.3 s); without it, upstream's OpenAI call is unchanged.
+- **Ask vesta recon**, a typed command box above the dock (`src/vesta/ask.js`,
+  `src/ui/styles/vesta-ask.css`). The page sends the conversation to `POST /api/vesta/agent`
+  (`server/providers/openai/vesta-agent.js`): Qwen with the globe's map tools and the voice
+  instructions minus the screenshot lines. The tool calls run in the page through the same runner as
+  the voice agent. The box keeps clear of the dock, the credits and the HUD readouts.
+- **Routing check.** `docker exec gods-eye-view node scripts/vesta-routing-eval.mjs` sends the voice
+  QA phrases to the agent: 59 of 62 routed as expected on 2026-09-30, median 1.9 s; the three misses
+  need context from an earlier turn.
 
 Server-side notes: `~/vesta-docs/services/gods-eye-view.md` on vesta.
 

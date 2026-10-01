@@ -1,11 +1,15 @@
 import { createStandaloneApplication } from './standalone/application.js';
 import { describeError } from './standalone/errors.js';
+import { mountAskVestaRecon } from './vesta/ask.js';
 
 const application = createStandaloneApplication({
   googleApiKey: import.meta.env.GOOGLE_MAPS_API_KEY,
   cesiumToken: import.meta.env.CESIUM_ION_TOKEN,
   allowQaRegistration: import.meta.env.DEV,
 });
+
+// vesta recon: the typed command box (map tools run through the voice runner).
+mountAskVestaRecon();
 
 application.start().catch((error) => {
   console.error("God's Eye View initialization failed:", error);
