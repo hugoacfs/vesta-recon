@@ -13,7 +13,7 @@ compose file, key script) sits one level up, with versioned copies in `deploy/ve
 | Compose project | `/srv/ai/compose/gods-eye-view/` (`docker-compose.yml`, `Dockerfile`, `entrypoint.sh`, `set-key.sh`, `teardown.sh`, `.env`) |
 | Source | `/srv/ai/compose/gods-eye-view/app` (this repository: `origin` = `hugoacfs/vesta-recon`, `upstream` = `bilawalsidhu/gods-eye-view`) |
 | Gateway | LiteLLM on `192.168.0.2:4000`, key `vesta-recon` |
-| Voice | vesta-voice staging, `https://vesta.tail22b555.ts.net/voice-staging/` (container `vesta-voice-staging`, `127.0.0.1:8097`) |
+| Voice | vesta-voice production, `https://vesta.tail22b555.ts.net/voice/` (container `vesta-voice`, `127.0.0.1:8095`); its staging at `/voice-staging/` for trials |
 | Server docs | `~/vesta-docs/services/gods-eye-view.md` |
 
 ## Deploy a change
@@ -102,7 +102,7 @@ suite was 5,405 passing tests and one skip (a Windows-only test).
 
 | Symptom | Look at |
 |---|---|
-| Voice: "vesta voice did not answer in 25 s" | `docker ps` (is `vesta-voice-staging` up?); its log: `docker logs --since 5m vesta-voice-staging`; "a globe call where the globe profile is off or the globe is down" means `VESTA_VOICE_GLOBE_BRIEF_URL` is unset there or this app is down |
+| Voice: "vesta voice did not answer in 25 s" | `docker ps` (is `vesta-voice` up?); its log: `docker logs --since 5m vesta-voice`; "a globe call where the globe profile is off or the globe is down" means `VESTA_VOICE_GLOBE_BRIEF_URL` is unset there or this app is down |
 | Voice connects but the map does not move | a hidden page does not render (the globe only animates when the tab is visible); the service log shows the `tool-call`s |
 | The microphone is refused | the browser's site permission for `:8600`; the call still connects for typed turns |
 | HUD summary missing | `docker logs gods-eye-view` for the hud-summary route; the gateway key in `.env` |

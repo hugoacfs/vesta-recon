@@ -17,7 +17,7 @@ microphone without third-party code.
    │  POST /api/vesta/agent  (the typed box) ─────▶       vesta-agent.js ─┼─▶ LiteLLM :4000 ─▶ Qwen 27B
    │                                                      GET /api/vesta/voice-brief ◀─┐    (vLLM, RTX 3090)
    │                                                                                   │ loopback
-   │  WebRTC: the call (audio both ways + a data channel) ──────────────────────▶  vesta-voice (staging)
+   │  WebRTC: the call (audio both ways + a data channel) ──────────────────────▶  vesta-voice (production)
    │        ◀── tool-call {id, name, args}                                        Qwen3-ASR, Pocket TTS
    │        ── tool-result {id, result} ──▶                                       (RTX 3060); Qwen via
    ▼                                                                              LiteLLM; memory, search

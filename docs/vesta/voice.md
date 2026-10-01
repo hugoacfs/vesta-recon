@@ -96,7 +96,9 @@ follow-through net, the brain grace, Pocket TTS with voice p231.
 - **Warm:** "Fly to London" → `fly_to_location` 1.4 s after the last word, her first word at 2.7 s;
   "Now show me the ships" → `set_layer_visibility` (AIS vessels), "Ships are on." at 2.9 s.
 - **Cold:** before the warm-up existed, a first turn waited 10.1 s for the model to read the prompt
-  (warm: 1.1 s). The warm-up now starts that reading as the call connects.
+  (warm: 1.1 s). The warm-up now starts that reading as the call connects, which helps when the first
+  words come a few seconds later: on production's first globe call (the prompt not read for hours, a
+  typed turn 3 s after connecting) the first round still waited 10.3 s, the next one 1.0 s.
 - **Two calls at once:** a globe call and a normal call ("what time is it on the server") both answered;
   the shared recogniser and voice were unaffected.
 - **Memory and search:** "Search the news for the latest on the Artemis Moon mission" → `news_search`
@@ -120,17 +122,22 @@ vesta-voice repository (`ONLY=globe` for this page). The sound itself needs a pe
 
 ## Staging and production
 
-Today the globe calls vesta-voice's **staging** instance, whose memory is the staging memory server
-(not Hugo's own notes). To move to production, on Hugo's word:
+Since the evening of 2026-10-01 the globe calls vesta-voice's **production** instance (Hugo's go after
+his own call on staging; its tag `stable-2026-10-01-globe`), so memory answers from Hugo's own notes.
+What that took:
 
-1. vesta-voice: promote `staging` to `main` and production as its runbook says (this carries the globe
-   profile, off until configured, and the microphone layer).
-2. Production's `.env` (`/srv/ai/compose/vesta-voice/.env`): add
+1. vesta-voice: `staging` promoted to `main` and production (the globe profile and the microphone layer).
+2. Production's `.env` (`/srv/ai/compose/vesta-voice/.env`):
    `VESTA_VOICE_GLOBE_BRIEF_URL=http://127.0.0.1:8096/api/vesta/voice-brief`, then `docker compose up -d`.
-3. This app's `.env` (`/srv/ai/compose/gods-eye-view/.env`): set
+3. This app's `.env` (`/srv/ai/compose/gods-eye-view/.env`):
    `VITE_VESTA_VOICE_OFFER_URL=https://vesta.tail22b555.ts.net/voice/api/offer`, then
    `docker compose up -d` (the container is recreated and the page rebuilt with the new URL).
-4. Check with a call: the map moves, memory answers from Hugo's own notes, the house stays out.
+4. A check in a browser with a fake microphone: the globe's typed "Fly to Paris" ran against production.
+
+vesta-voice's staging instance keeps the globe profile too, for trying changes: scripted calls go there
+(never recordings against production, where the voice acts on what she hears). To point the globe back at
+staging, set `VITE_VESTA_VOICE_OFFER_URL` to `https://vesta.tail22b555.ts.net/voice-staging/api/offer`
+and `docker compose up -d` (the backup `.env.bak-before-voice-prod-*` beside `.env` has it).
 
 ## Known limits
 

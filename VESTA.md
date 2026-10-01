@@ -31,7 +31,7 @@ vesta home page lists it as **Vesta Recon** among the agents. → [operations](d
 - `vesta` is the fork and what runs on vesta. Upstream updates: merge `main` into `vesta`.
   → [upstream](docs/vesta/upstream.md)
 - One instance until it goes live (Hugo, 2026-09-30); a staging instance comes then. Voice uses
-  vesta-voice's staging instance until Hugo moves it.
+  vesta-voice's production instance since 2026-10-01 (its tag `stable-2026-10-01-globe`).
 
 ## Documentation
 

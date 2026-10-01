@@ -35,6 +35,8 @@ God's Eye View was set up on vesta by an earlier session (container `gods-eye-vi
 - vesta-voice staging `e09a94a` — globe calls also have memory and web search (Hugo's ask), never the
   house.
 - Hugo's test on staging: "The voice works perfectly fine with web search, memory and map controls!"
+- In production the same night at his word: vesta-voice `stable-2026-10-01-globe` (`cb1b3b6`), and this
+  page's voice pointed at `/voice/api/offer`; memory is now his own.
 
 ## 2026-10-01 — Phase 3: the Vesta look
 
@@ -47,7 +49,6 @@ God's Eye View was set up on vesta by an earlier session (container `gods-eye-vi
 
 ## Open
 
-- Voice on vesta-voice production (and Hugo's own memory there), on his word ([voice.md](voice.md)).
 - The typed box with memory and web search, like voice.
 - Drawn-outline map events for voice.
 - The phone layout: upstream's overlapping HUD readouts, the typed box under the CONTEXT panel.
