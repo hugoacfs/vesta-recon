@@ -60,8 +60,9 @@ cd /srv/ai/compose/gods-eye-view && docker compose up -d --build
   (`server/providers/openai/vesta-voice-brief.js`), so the page sends no instructions. A map tool
   Qwen calls comes to the page as a `tool-call` message, runs through the same runner as the typed
   box, and goes back as `tool-result`. The ask box shows what voice heard and what Vesta said. Map
-  events (drawn outlines) are not sent yet. Pipecat's WebRTC transport fetches Daily's call-machine
-  script from `c.daily.co` when a call starts, as the vesta-voice page does.
+  events (drawn outlines) are not sent yet. The microphone is our own (`src/vesta/micMediaManager.js`,
+  plain `getUserMedia`; the same file is vesta-voice's `web/mic.js`): the transport's default media
+  manager would fetch Daily's call-machine script from `c.daily.co` whenever a call starts.
 
 Server-side notes: `~/vesta-docs/services/gods-eye-view.md` on vesta.
 

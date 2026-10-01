@@ -3,7 +3,9 @@
 // Pipecat's browser client. The map tools the model calls arrive as server
 // messages ("tool-call"), run here through the session's runAction, and go back
 // as client messages ("tool-result"). The prompt and the tools are fetched by
-// vesta-voice from this app's server; the page only says it is the globe.
+// vesta-voice from this app's server; the page only says it is the globe. The
+// microphone is our own (micMediaManager.js), so no Daily script is fetched.
+import { micTransport } from './micMediaManager.js';
 
 const CONNECT_TIMEOUT_MS = 25000;
 const MAX_RESULT_CHARS = 8000;
@@ -45,7 +47,9 @@ async function pipecatClient(options) {
   ]);
   return new PipecatClient({
     ...options,
-    transport: new SmallWebRTCTransport({ waitForICEGathering: true }),
+    transport: micTransport(SmallWebRTCTransport, {
+      waitForICEGathering: true,
+    }),
   });
 }
 
