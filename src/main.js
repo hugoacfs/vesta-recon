@@ -1,6 +1,7 @@
 import { createStandaloneApplication } from './standalone/application.js';
 import { describeError } from './standalone/errors.js';
 import { mountAskVestaRecon } from './vesta/ask.js';
+import { mountVestaBrand } from './vesta/brand.js';
 import { vestaVoiceOption } from './vesta/voiceSession.js';
 
 const application = createStandaloneApplication({
@@ -11,8 +12,10 @@ const application = createStandaloneApplication({
   voice: vestaVoiceOption(import.meta.env.VITE_VESTA_VOICE_OFFER_URL),
 });
 
-// vesta recon: the typed command box (map tools run through the voice runner).
+// vesta recon: the typed command box (map tools run through the voice runner),
+// and the brand's link home.
 mountAskVestaRecon();
+mountVestaBrand();
 
 application.start().catch((error) => {
   console.error("God's Eye View initialization failed:", error);

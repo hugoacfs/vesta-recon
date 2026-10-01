@@ -1,0 +1,15 @@
+vesta recon self-hosted fonts (written by scripts/vesta-fonts.py from the Google Fonts CSS API)
+
+- inter-latin.woff2, inter-latin-ext.woff2                    Inter           (c) The Inter Project Authors   https://github.com/rsms/inter
+- jetbrains-mono-latin.woff2, jetbrains-mono-latin-ext.woff2  JetBrains Mono  (c) The JetBrains Mono Project  https://github.com/JetBrains/JetBrainsMono
+- space-grotesk-latin.woff2, space-grotesk-latin-ext.woff2    Space Grotesk   (c) Florian Karsten             https://github.com/floriankarsten/space-grotesk
+
+These three families are licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org).
+They are variable fonts: one file per subset carries every weight the app uses.
+
+- material-symbols-outlined.woff2   Material Symbols Outlined   (c) Google LLC   https://github.com/google/material-design-icons
+
+Licensed under the Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0). The whole
+icon set at the axes the app uses (opsz 20, wght 400, FILL 0, GRAD 0), so no glyph can be missing.
+
+../hearth.svg is the Vesta hearth emblem, the same as on the vesta landing page.

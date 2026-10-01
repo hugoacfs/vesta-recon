@@ -1,0 +1,124 @@
+/* vesta recon: the Vesta look. Upstream's cyan, teal and blue literals are
+   given Vesta values at build time (build/vesta-palette.mjs, run by
+   postcss.config.js); this file sets the tokens upstream names and styles the
+   hearth and the wordmark. Everything that recolours stays clear of upstream's
+   cyber skin, which keeps its own look. */
+
+:root:not([data-ui-theme='cyber']) {
+  --bg-dark: #07080c;
+  --glass-bg: rgba(13, 12, 17, 0.76);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 143, 80, 0.42);
+  --text-primary: #eef1f6;
+  --text-secondary: rgba(238, 241, 246, 0.56);
+  --text-dim: rgba(238, 241, 246, 0.34);
+  --menu-bg: #121116;
+}
+
+:root {
+  --vesta-ember-1: #ffc46b;
+  --vesta-ember-2: #ff7847;
+  --vesta-grad: linear-gradient(115deg, #ffffff 20%, #ffc46b 62%, #ff7847 88%);
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+}
+
+/* ── The hearth and the wordmark ─────────────────── */
+.brand-logo.vesta-hearth {
+  aspect-ratio: 1;
+}
+
+#title-bar .title-logo.vesta-hearth {
+  width: 40px;
+  filter: drop-shadow(0 0 10px rgba(255, 120, 71, 0.45));
+}
+
+:root:not([data-ui-theme='cyber']) #title-bar .title-glow {
+  background: radial-gradient(
+    ellipse,
+    rgba(255, 122, 60, 0.18) 0%,
+    transparent 70%
+  );
+}
+
+#title-bar h1 .vesta-wordmark,
+.loader-content h2 .vesta-wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: none;
+  text-shadow: none;
+  background: var(--vesta-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#title-bar h1 .vesta-wordmark {
+  font-size: 30px;
+}
+
+.vesta-wordmark .vesta-wordmark-sub {
+  margin-left: 0.28em;
+  font-weight: 400;
+}
+
+#title-bar h1 .vesta-caret {
+  margin-left: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  font-weight: 400;
+  -webkit-text-fill-color: var(--vesta-ember-1);
+  animation: vesta-caret-blink 1.15s steps(2) infinite;
+}
+
+@keyframes vesta-caret-blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #title-bar h1 .vesta-caret {
+    animation: none;
+  }
+}
+
+#title-bar .subtitle {
+  margin-top: 10px;
+  font-size: 10.5px;
+  letter-spacing: 1.2px;
+  text-transform: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+#title-bar .subtitle a {
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+  transition: color var(--transition-fast);
+}
+
+#title-bar .subtitle a:hover,
+#title-bar .subtitle a:focus-visible {
+  color: var(--vesta-ember-1);
+}
+
+#title-bar .subtitle .vesta-home {
+  color: var(--text-secondary);
+}
+
+/* ── The loading screen ──────────────────────────── */
+.loader-logo.vesta-hearth {
+  width: 96px;
+  filter: drop-shadow(0 0 22px rgba(255, 120, 71, 0.42));
+}
+
+.loader-content h2 .vesta-wordmark {
+  font-size: 34px;
+}
+
+/* ── Ember in the details ────────────────────────── */
+:root:not([data-ui-theme='cyber']) ::selection {
+  background: rgba(255, 143, 80, 0.32);
+}

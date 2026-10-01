@@ -22,5 +22,7 @@
 @import './src/ui/styles/provider-settings.css';
 
 @import './src/ui/styles/weather.css';
+@import './src/ui/styles/vesta-fonts.css';
+@import './src/ui/styles/vesta-theme.css';
 @import './src/ui/styles/vesta-ask.css';
 @import './src/ui/styles/cyber.css';

@@ -53,10 +53,12 @@ const HUD_COLORS = {
     glow: 'rgba(255, 170, 0, 0.5)',
     border: 'rgba(255, 170, 0, 0.2)',
   },
+  // vesta recon: through the build-time palette (build/vesta-palette.mjs),
+  // so the Vesta look recolours it and the cyber skin keeps the cyan.
   _default: {
-    main: 'rgba(0, 255, 255, 0.6)',
-    glow: 'rgba(0, 255, 255, 0.4)',
-    border: 'rgba(0, 255, 255, 0.15)',
+    main: 'rgba(var(--vr-0-255-255, 0, 255, 255), 0.6)',
+    glow: 'rgba(var(--vr-0-255-255, 0, 255, 255), 0.4)',
+    border: 'rgba(var(--vr-0-255-255, 0, 255, 255), 0.15)',
   },
 };
 

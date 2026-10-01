@@ -6,16 +6,20 @@
  * presentation values.
  */
 
-/** Shared visual tokens used by every world-overlay source. */
+/**
+ * Shared visual tokens used by every world-overlay source. vesta recon: the
+ * card chrome in Vesta's ground, ember and warm white (a canvas cannot read
+ * the stylesheet's variables, so the values are written here).
+ */
 export const WORLD_OVERLAY_STYLE = Object.freeze({
-  background: 'rgba(4, 12, 16, 0.82)',
-  selectedBackground: 'rgba(5, 18, 24, 0.94)',
-  border: 'rgba(190, 232, 242, 0.18)',
-  selectedBorder: 'rgba(107, 232, 255, 0.72)',
-  title: 'rgba(232, 240, 244, 0.96)',
+  background: 'rgba(10, 9, 12, 0.82)',
+  selectedBackground: 'rgba(16, 12, 10, 0.94)',
+  border: 'rgba(255, 232, 205, 0.18)',
+  selectedBorder: 'rgba(255, 196, 107, 0.72)',
+  title: 'rgba(238, 241, 246, 0.96)',
   detail: 'rgba(147, 161, 173, 0.92)',
-  leader: 'rgba(147, 213, 228, 0.58)',
-  accent: '#6be8ff',
+  leader: 'rgba(255, 210, 160, 0.5)',
+  accent: '#ffc46b',
   fontLabel: '500 10px "JetBrains Mono", monospace',
   fontTrack: '600 10px "JetBrains Mono", monospace',
   fontTitle: '600 12px "JetBrains Mono", monospace',
@@ -26,7 +30,7 @@ export const WORLD_OVERLAY_STYLE = Object.freeze({
   radius: 4,
   anchorDotRadius: 3.2,
   anchorDotStrokeWidth: 1,
-  anchorDotStroke: 'rgba(4, 12, 16, 0.96)',
+  anchorDotStroke: 'rgba(10, 9, 12, 0.96)',
   leaderWidth: 1.35,
 });
 
@@ -36,11 +40,11 @@ export const CCTV_THUMBNAIL_STYLE = Object.freeze({
   titleHeight: 13,
   titleChars: 15,
   background: WORLD_OVERLAY_STYLE.background,
-  titleColor: 'rgba(210, 236, 244, 0.95)',
+  titleColor: 'rgba(238, 236, 232, 0.95)',
   titleFont: '600 10px "JetBrains Mono", monospace',
-  accent: 'rgb(107, 232, 255)',
-  leader: 'rgba(107, 232, 255, 0.6)',
-  rule: 'rgba(107, 232, 255, 0.95)',
+  accent: 'rgb(255, 196, 107)',
+  leader: 'rgba(255, 196, 107, 0.6)',
+  rule: 'rgba(255, 196, 107, 0.95)',
   ruleHeight: 2,
   radius: 4,
 });

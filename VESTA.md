@@ -37,7 +37,7 @@ cd /srv/ai/compose/gods-eye-view && docker compose up -d --build
 1. LLM on the box: HUD summaries and typed commands through LiteLLM. **Done 2026-10-01** (below).
 2. Voice through vesta-voice: a "globe" profile whose map actions run in this page. **On voice
    staging since 2026-10-01** (below); vesta-voice's production waits for Hugo.
-3. The Vesta look and the name, **vesta recon**.
+3. The Vesta look and the name, **vesta recon**. **Done 2026-10-01** (below).
 
 ## What the fork adds so far
 
@@ -63,11 +63,26 @@ cd /srv/ai/compose/gods-eye-view && docker compose up -d --build
   events (drawn outlines) are not sent yet. The microphone is our own (`src/vesta/micMediaManager.js`,
   plain `getUserMedia`; the same file is vesta-voice's `web/mic.js`): the transport's default media
   manager would fetch Daily's call-machine script from `c.daily.co` whenever a call starts.
+- **The Vesta look and the name** (Phase 3). The hearth and the wordmark in `index.html`,
+  `src/ui/templates/scene-chrome.html` and `hud-loading.html` (the "‹ vesta" link is set by
+  `src/vesta/brand.js`; the credit to God's Eye View sits under the wordmark). Fonts are self-hosted
+  (`public/vesta/fonts`, `src/ui/styles/vesta-fonts.css`, refreshed by `scripts/vesta-fonts.py`): no
+  request goes to Google Fonts. The palette: `postcss.config.js` runs `build/vesta-palette.mjs` over
+  upstream's stylesheets when the page is built, turning each cyan, teal or blue literal into a
+  variable that falls back to the literal itself, and appending the Vesta value of each everywhere
+  but under upstream's cyber skin, which keeps its own look; no upstream stylesheet is edited.
+  `src/ui/styles/vesta-theme.css` sets upstream's own tokens and styles the wordmark. In JavaScript:
+  the HUD's default colour (`src/hud.js`, through the same variables) and the world-overlay card
+  chrome (`src/overlays/worldOverlayTokens.js`; written values, since a canvas cannot read CSS; one
+  pinned value in `worldOverlayDraw.test.mjs` follows). Colours that carry meaning (aircraft
+  categories, alerts, feed states) are unchanged.
 
 Server-side notes: `~/vesta-docs/services/gods-eye-view.md` on vesta.
 
 ## Rules
 
 - Keys only in the server's `.env`, never in git.
-- Changes stay in new files and small seams, so upstream merges stay easy.
+- Changes stay in new files and small seams, so upstream merges stay easy. After a merge, re-run
+  `scripts/vesta-fonts.py` only if upstream changed its fonts; the palette follows new literals by
+  itself.
 - The LICENSE and the credit to Bilawal Sidhu stay.
