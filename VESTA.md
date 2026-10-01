@@ -1,88 +1,58 @@
 # vesta recon
 
-A fork of [God's Eye View](https://github.com/bilawalsidhu/gods-eye-view) by Bilawal Sidhu (MIT)
-for **vesta**, Hugo's home server: the same live 3D globe, running on vesta's own inference
-(Qwen through LiteLLM) and voice (vesta-voice), in the Vesta look. The original README below this
-file is upstream's and stays as it is.
+**vesta recon** is Hugo's fork of [God's Eye View](https://github.com/bilawalsidhu/gods-eye-view) by
+Bilawal Sidhu (MIT) for **vesta**, his home server: the same live 3D globe of public data, running on
+vesta's own model (Qwen through LiteLLM) and voice (vesta-voice), in the Vesta look. Upstream's
+`README.md` is left as it is; everything the fork adds is described here and in
+[`docs/vesta/`](docs/vesta/README.md).
+
+## What the fork adds
+
+- **Vesta's voice.** The dock's microphone calls vesta-voice over WebRTC. She moves the map with the
+  globe's 30 map tools, and has Hugo's memory and web search as on any call with her (never the house).
+  → [voice](docs/vesta/voice.md)
+- **Qwen on the box.** "Ask vesta recon", a typed command box above the dock, and the HUD's five-word
+  summary, both through vesta's LiteLLM gateway with thinking off. → [model](docs/vesta/model.md)
+- **The Vesta look.** The hearth and the "vesta recon" wordmark, ember on the Vesta ground, Space
+  Grotesk, a link home and the credit to God's Eye View. The palette is a build step, so no upstream
+  stylesheet is edited, and upstream's cyber skin keeps its own look. → [look](docs/vesta/look.md)
+- **Nothing fetched from third parties it does not need.** The fonts are self-hosted (no Google Fonts)
+  and the microphone layer is our own (no Daily call-machine script).
+
+## Where it runs
+
+`https://vesta.tail22b555.ts.net:8600/` on the tailnet (Tailscale Serve → `127.0.0.1:8096`), container
+`gods-eye-view`, compose project `/srv/ai/compose/gods-eye-view`, whose `app/` is this repository. The
+vesta home page lists it as **Vesta Recon** among the agents. → [operations](docs/vesta/operations.md)
 
 ## Branches
 
 - `main` mirrors upstream; update it with GitHub's **Sync fork**.
-- `vesta` is our work and what runs on vesta at `https://vesta.tail22b555.ts.net:8600`
-  (container `gods-eye-view`, compose project `/srv/ai/compose/gods-eye-view`). Upstream updates:
-  merge `main` into `vesta`.
-- A staging instance comes when it goes live (Hugo, 2026-09-30); until then work lands on `vesta`.
+- `vesta` is the fork and what runs on vesta. Upstream updates: merge `main` into `vesta`.
+  → [upstream](docs/vesta/upstream.md)
+- One instance until it goes live (Hugo, 2026-09-30); a staging instance comes then. Voice uses
+  vesta-voice's staging instance until Hugo moves it.
 
-## Deploy on vesta
+## Documentation
 
-`deploy/vesta/` holds versioned copies of the wrapper (Dockerfile, entrypoint, compose, `set-key.sh`,
-README). The running copies live in `/srv/ai/compose/gods-eye-view/` beside `.env` (provider keys;
-never in git; backed up in `~/backups/gods-eye-view-*.tgz`). After a change:
-
-```bash
-cd /srv/ai/compose/gods-eye-view && docker compose up -d --build
-```
-
-## Configuration added by the fork
-
-| Variable | Meaning |
+| Page | What it covers |
 |---|---|
-| `VESTA_LLM_BASE_URL` | vesta's OpenAI-compatible gateway (LiteLLM). When set, the app's text-LLM calls go there instead of OpenAI. |
-| `VESTA_LLM_API_KEY` | the gateway key: a LiteLLM virtual key `vesta-recon`, limited to the `default` model |
-| `VESTA_LLM_MODEL` | model alias, default `default` (Qwen 27B) |
-| `VITE_VESTA_VOICE_OFFER_URL` | vesta-voice's offer URL, read when the page is built; set, the dock's microphone calls vesta-voice instead of OpenAI (now `https://vesta.tail22b555.ts.net/voice-staging/api/offer`) |
+| [docs/vesta/architecture.md](docs/vesta/architecture.md) | the pieces and how they talk: the page, its server, the gateway, vesta-voice |
+| [docs/vesta/voice.md](docs/vesta/voice.md) | voice through vesta-voice: the globe profile, the tool bridge, the microphone, tests, figures |
+| [docs/vesta/model.md](docs/vesta/model.md) | Qwen on the box: the gateway key, HUD summaries, the typed agent, the routing check |
+| [docs/vesta/look.md](docs/vesta/look.md) | the name, the palette step, the tokens, the fonts, how to tune them |
+| [docs/vesta/operations.md](docs/vesta/operations.md) | deploy, configuration, keys, checks, screenshots, rollback, troubleshooting |
+| [docs/vesta/upstream.md](docs/vesta/upstream.md) | taking upstream updates, and every upstream file the fork touches |
+| [docs/vesta/history.md](docs/vesta/history.md) | what was done, when, with the commits |
 
-## Plan
-
-1. LLM on the box: HUD summaries and typed commands through LiteLLM. **Done 2026-10-01** (below).
-2. Voice through vesta-voice: a "globe" profile whose map actions run in this page. **On voice
-   staging since 2026-10-01** (below); vesta-voice's production waits for Hugo.
-3. The Vesta look and the name, **vesta recon**. **Done 2026-10-01** (below).
-
-## What the fork adds so far
-
-- **HUD summaries on Qwen.** `server/providers/openai/vesta-llm.js` and a small seam in
-  `hud-summary.js`: with `VESTA_LLM_BASE_URL` set, the five-word summary comes from the gateway's
-  Chat Completions with thinking off (about 0.3 s); without it, upstream's OpenAI call is unchanged.
-- **Ask vesta recon**, a typed command box above the dock (`src/vesta/ask.js`,
-  `src/ui/styles/vesta-ask.css`). The page sends the conversation to `POST /api/vesta/agent`
-  (`server/providers/openai/vesta-agent.js`): Qwen with the globe's map tools and the voice
-  instructions minus the screenshot lines. The tool calls run in the page through the same runner as
-  the voice agent. The box keeps clear of the dock, the credits and the HUD readouts.
-- **Routing check.** `docker exec gods-eye-view node scripts/vesta-routing-eval.mjs` sends the voice
-  QA phrases to the agent: 59 of 62 routed as expected on 2026-09-30, median 1.9 s; the three misses
-  need context from an earlier turn.
-- **Voice through vesta-voice** (`src/vesta/voiceSession.js`, a session adapter for
-  `src/voice/session.js`). With `VITE_VESTA_VOICE_OFFER_URL` set, the dock's microphone calls
-  vesta-voice's globe profile with Pipecat's client (`@pipecat-ai/client-js` 1.13.1 and
-  `small-webrtc-transport` 1.10.8, as the vesta-voice page; loaded when a call starts). vesta-voice
-  fetches the map rules and tools from `GET /api/vesta/voice-brief`
-  (`server/providers/openai/vesta-voice-brief.js`), so the page sends no instructions. A map tool
-  Qwen calls comes to the page as a `tool-call` message, runs through the same runner as the typed
-  box, and goes back as `tool-result`. The ask box shows what voice heard and what Vesta said. Map
-  events (drawn outlines) are not sent yet. The microphone is our own (`src/vesta/micMediaManager.js`,
-  plain `getUserMedia`; the same file is vesta-voice's `web/mic.js`): the transport's default media
-  manager would fetch Daily's call-machine script from `c.daily.co` whenever a call starts.
-- **The Vesta look and the name** (Phase 3). The hearth and the wordmark in `index.html`,
-  `src/ui/templates/scene-chrome.html` and `hud-loading.html` (the "‹ vesta" link is set by
-  `src/vesta/brand.js`; the credit to God's Eye View sits under the wordmark). Fonts are self-hosted
-  (`public/vesta/fonts`, `src/ui/styles/vesta-fonts.css`, refreshed by `scripts/vesta-fonts.py`): no
-  request goes to Google Fonts. The palette: `postcss.config.js` runs `build/vesta-palette.mjs` over
-  upstream's stylesheets when the page is built, turning each cyan, teal or blue literal into a
-  variable that falls back to the literal itself, and appending the Vesta value of each everywhere
-  but under upstream's cyber skin, which keeps its own look; no upstream stylesheet is edited.
-  `src/ui/styles/vesta-theme.css` sets upstream's own tokens and styles the wordmark. In JavaScript:
-  the HUD's default colour (`src/hud.js`, through the same variables) and the world-overlay card
-  chrome (`src/overlays/worldOverlayTokens.js`; written values, since a canvas cannot read CSS; one
-  pinned value in `worldOverlayDraw.test.mjs` follows). Colours that carry meaning (aircraft
-  categories, alerts, feed states) are unchanged.
-
-Server-side notes: `~/vesta-docs/services/gods-eye-view.md` on vesta.
+Server-side notes: `~/vesta-docs/services/gods-eye-view.md` on vesta. The voice service is its own
+project, `hugoacfs/vesta-voice` (its `docs/architecture.md` describes the globe profile).
 
 ## Rules
 
-- Keys only in the server's `.env`, never in git.
-- Changes stay in new files and small seams, so upstream merges stay easy. After a merge, re-run
-  `scripts/vesta-fonts.py` only if upstream changed its fonts; the palette follows new literals by
-  itself.
-- The LICENSE and the credit to Bilawal Sidhu stay.
+- Keys only in the server's `.env` (typed hidden with `set-key.sh`), never in git, docs or chat.
+- Changes stay in new files and small seams, so upstream merges stay easy.
+- The LICENSE and the credit to Bilawal Sidhu stay; the title bar carries the credit too.
+- A change is committed, rebuilt, checked (tests, format, boundaries, build, a look in a browser) and
+  pushed.
+- vesta-voice moves on its own rules: work on its staging; production on Hugo's word.
