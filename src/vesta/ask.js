@@ -148,6 +148,39 @@ function keepClear(form, documentRef, windowRef) {
 }
 
 /**
+ * The map runner, whichever voice the page composed: upstream's controller
+ * carries it, vesta-voice's session adapter (src/vesta/voiceSession.js) too.
+ *
+ * @param {Window} windowRef
+ * @returns {Function|undefined}
+ */
+export function voiceRunner(windowRef) {
+  const commands = windowRef.__gevVoiceCommands;
+  return commands?.runner ?? commands?.session?.adapter?.runner;
+}
+
+/** Show in the reply line what voice heard and what she answered. */
+function followVoice(reply, windowRef) {
+  let followed = null;
+  let unsubscribe = null;
+  const follow = () => {
+    const session = windowRef.__gevVoiceCommands?.session;
+    if (typeof session?.subscribe !== 'function' || session === followed)
+      return;
+    unsubscribe?.();
+    followed = session;
+    unsubscribe = session.subscribe((event) => {
+      if (event?.type !== 'transcript' || !event.final) return;
+      const text = String(event.text || '').trim();
+      if (text) reply.textContent = event.role === 'user' ? `“${text}”` : text;
+    });
+  };
+  follow();
+  // Voice is composed once the globe has started, and again if it restarts.
+  windowRef.setInterval(follow, 1000);
+}
+
+/**
  * Add the box to the page. The runner is looked up when a request is sent, so
  * the box can appear before the globe has finished starting.
  *
@@ -178,7 +211,7 @@ export function mountAskVestaRecon({
     event.preventDefault();
     const text = input.value.trim();
     if (!text || busy) return;
-    const runner = windowRef.__gevVoiceCommands?.runner;
+    const runner = voiceRunner(windowRef);
     if (typeof runner !== 'function') {
       reply.textContent = 'The globe is still starting…';
       return;
@@ -199,5 +232,6 @@ export function mountAskVestaRecon({
     }
   });
   keepClear(form, documentRef, windowRef);
+  followVoice(reply, windowRef);
   return form;
 }

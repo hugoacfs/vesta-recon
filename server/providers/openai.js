@@ -3,6 +3,7 @@ import { handleHudSummary } from './openai/hud-summary.js';
 import { createDebugLogHandler } from './openai/debug-log.js';
 import { createRealtimeTokenHandler } from './openai/realtime.js';
 import { handleVestaAgent } from './openai/vesta-agent.js';
+import { handleVestaVoiceBrief } from './openai/vesta-voice-brief.js';
 
 /**
  * Vite plugin: OpenAI Realtime ephemeral client secret.
@@ -19,6 +20,8 @@ function openAiRealtimeProxy({
     middlewares.use('/api/openai/hud-summary', handleHudSummary);
     // vesta recon: the typed agent on vesta's gateway.
     middlewares.use('/api/vesta/agent', handleVestaAgent);
+    // vesta recon: the map brief vesta-voice fetches for a globe call.
+    middlewares.use('/api/vesta/voice-brief', handleVestaVoiceBrief);
 
     middlewares.use(
       '/api/realtime/debug-log',

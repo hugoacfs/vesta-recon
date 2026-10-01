@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { askVestaRecon, clearBottom, trimHistory } from './ask.js';
+import { askVestaRecon, clearBottom, trimHistory, voiceRunner } from './ask.js';
 
 function answers(...messages) {
   const bodies = [];
@@ -108,4 +108,20 @@ test('the box rises above whatever shares its columns, lowest first', () => {
   assert.equal(clearBottom(box, [dock, rect(24, 774, 400, 28)], 900), 812);
   // Hidden (zero-size) obstacles are ignored; nothing at all means the bottom.
   assert.equal(clearBottom(box, [rect(500, 800, 0, 0)], 900), 900);
+});
+
+test('the map runner is found under either voice', () => {
+  const upstream = async () => ({ ok: true });
+  const vesta = async () => ({ ok: true });
+  assert.equal(
+    voiceRunner({ __gevVoiceCommands: { runner: upstream } }),
+    upstream,
+  );
+  assert.equal(
+    voiceRunner({
+      __gevVoiceCommands: { session: { adapter: { runner: vesta } } },
+    }),
+    vesta,
+  );
+  assert.equal(voiceRunner({}), undefined);
 });

@@ -30,11 +30,13 @@ cd /srv/ai/compose/gods-eye-view && docker compose up -d --build
 | `VESTA_LLM_BASE_URL` | vesta's OpenAI-compatible gateway (LiteLLM). When set, the app's text-LLM calls go there instead of OpenAI. |
 | `VESTA_LLM_API_KEY` | the gateway key: a LiteLLM virtual key `vesta-recon`, limited to the `default` model |
 | `VESTA_LLM_MODEL` | model alias, default `default` (Qwen 27B) |
+| `VITE_VESTA_VOICE_OFFER_URL` | vesta-voice's offer URL, read when the page is built; set, the dock's microphone calls vesta-voice instead of OpenAI (now `https://vesta.tail22b555.ts.net/voice-staging/api/offer`) |
 
 ## Plan
 
 1. LLM on the box: HUD summaries and typed commands through LiteLLM. **Done 2026-10-01** (below).
-2. Voice through vesta-voice: a "globe" profile whose map actions run in this page.
+2. Voice through vesta-voice: a "globe" profile whose map actions run in this page. **On voice
+   staging since 2026-10-01** (below); vesta-voice's production waits for Hugo.
 3. The Vesta look and the name, **vesta recon**.
 
 ## What the fork adds so far
@@ -50,6 +52,16 @@ cd /srv/ai/compose/gods-eye-view && docker compose up -d --build
 - **Routing check.** `docker exec gods-eye-view node scripts/vesta-routing-eval.mjs` sends the voice
   QA phrases to the agent: 59 of 62 routed as expected on 2026-09-30, median 1.9 s; the three misses
   need context from an earlier turn.
+- **Voice through vesta-voice** (`src/vesta/voiceSession.js`, a session adapter for
+  `src/voice/session.js`). With `VITE_VESTA_VOICE_OFFER_URL` set, the dock's microphone calls
+  vesta-voice's globe profile with Pipecat's client (`@pipecat-ai/client-js` 1.13.1 and
+  `small-webrtc-transport` 1.10.8, as the vesta-voice page; loaded when a call starts). vesta-voice
+  fetches the map rules and tools from `GET /api/vesta/voice-brief`
+  (`server/providers/openai/vesta-voice-brief.js`), so the page sends no instructions. A map tool
+  Qwen calls comes to the page as a `tool-call` message, runs through the same runner as the typed
+  box, and goes back as `tool-result`. The ask box shows what voice heard and what Vesta said. Map
+  events (drawn outlines) are not sent yet. Pipecat's WebRTC transport fetches Daily's call-machine
+  script from `c.daily.co` when a call starts, as the vesta-voice page does.
 
 Server-side notes: `~/vesta-docs/services/gods-eye-view.md` on vesta.
 
