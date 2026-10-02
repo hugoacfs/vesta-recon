@@ -14,7 +14,10 @@ const application = createStandaloneApplication({
 
 // vesta recon: the typed command box (map tools run through the voice runner),
 // and the brand's link home.
-mountAskVestaRecon();
+mountAskVestaRecon({
+  // A draft (2026-10-02): with ?vesta-text in the address, the box talks to Vesta through vesta-voice.
+  textOfferUrl: import.meta.env.VITE_VESTA_TEXT_OFFER_URL,
+});
 mountVestaBrand();
 
 application.start().catch((error) => {

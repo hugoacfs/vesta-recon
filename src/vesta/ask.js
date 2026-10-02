@@ -2,6 +2,8 @@
 // /api/vesta/agent (Qwen on vesta's gateway, with the globe's map tools); tool
 // calls run here, through the same runner the voice agent uses.
 
+import { createVestaTextSession, vestaTextDraft } from './textSession.js';
+
 const MAX_HISTORY = 24;
 const MAX_TOOL_CHARS = 8000;
 const MAX_STEPS = 6;
@@ -184,29 +186,52 @@ function followVoice(reply, windowRef) {
  * Add the box to the page. The runner is looked up when a request is sent, so
  * the box can appear before the globe has finished starting.
  *
- * @param {{ documentRef?: Document, windowRef?: Window }} [options]
+ * With `textOfferUrl` configured and `?vesta-text` in the address (a draft,
+ * 2026-10-02), the box talks to Vesta through vesta-voice instead of its own
+ * map-only agent: the same Vesta as a voice call, memory and web search
+ * included, answering in text (src/vesta/textSession.js).
+ *
+ * @param {{ documentRef?: Document, windowRef?: Window, textOfferUrl?: string, createTextSession?: Function }} [options]
  * @returns {HTMLFormElement|null}
  */
 export function mountAskVestaRecon({
   documentRef = document,
   windowRef = window,
+  textOfferUrl,
+  createTextSession = createVestaTextSession,
 } = {}) {
   if (documentRef.getElementById('vesta-ask')) return null;
+  const throughVesta = vestaTextDraft(windowRef, textOfferUrl);
   const form = documentRef.createElement('form');
   form.id = 'vesta-ask';
   form.className = 'vesta-ask';
   form.setAttribute('autocomplete', 'off');
+  if (throughVesta) form.dataset.mode = 'vesta';
+  const placeholder = throughVesta
+    ? 'Ask Vesta… (draft: through vesta-voice)'
+    : 'Ask vesta recon…';
   // The reply sits above the input, so the input stays put when it appears.
   form.innerHTML = `
     <div class="vesta-ask-reply" role="status" aria-live="polite"></div>
     <input class="vesta-ask-input" type="text" name="q" maxlength="500"
-      placeholder="Ask vesta recon…" aria-label="Ask vesta recon" />
+      placeholder="${placeholder}" aria-label="Ask vesta recon" />
     <button class="vesta-ask-send" type="submit" aria-label="Send">↵</button>`;
   documentRef.body.appendChild(form);
   const input = form.querySelector('.vesta-ask-input');
   const reply = form.querySelector('.vesta-ask-reply');
   let history = [];
   let busy = false;
+  let textSession = null;
+  const vestaText = () =>
+    (textSession ??= createTextSession({
+      offerUrl: textOfferUrl,
+      runner: (name, args, options) =>
+        voiceRunner(windowRef)(name, args, options),
+    }));
+  // The call is opened as soon as Hugo starts typing, so Vesta has read her
+  // long prompt by the time he asks.
+  if (throughVesta)
+    input.addEventListener('focus', () => void vestaText().prepare());
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const text = input.value.trim();
@@ -221,11 +246,22 @@ export function mountAskVestaRecon({
     reply.textContent = '…';
     input.value = '';
     try {
-      history = trimHistory(history);
-      const answer = await askVestaRecon(text, { history, runner });
-      reply.textContent = answer.text || (answer.ran ? 'Done.' : '');
+      if (throughVesta) {
+        const answer = await vestaText().ask(text, {
+          onText: (partial) => {
+            reply.textContent = partial;
+          },
+        });
+        reply.textContent = answer.text || (answer.ran ? 'Done.' : '');
+      } else {
+        history = trimHistory(history);
+        const answer = await askVestaRecon(text, { history, runner });
+        reply.textContent = answer.text || (answer.ran ? 'Done.' : '');
+      }
     } catch {
-      reply.textContent = 'vesta recon could not answer just now.';
+      reply.textContent = throughVesta
+        ? 'Vesta could not answer just now.'
+        : 'vesta recon could not answer just now.';
     } finally {
       busy = false;
       delete form.dataset.state;
