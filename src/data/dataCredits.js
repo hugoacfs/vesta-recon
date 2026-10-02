@@ -338,6 +338,10 @@ export const DATA_CREDITS = [
     html: 'Webcam (Warendorf): <a href="https://www.warendorf.de/" target="_blank" rel="noopener">Stadt Warendorf</a> (courtesy)',
   },
   {
+    key: 'chichester-cctv',
+    html: 'Webcam (Chichester): <a href="https://www.vision-environnement.com/" target="_blank" rel="noopener">vision-environnement</a> (courtesy); M27 camera: National Highways via the <a href="https://trafficcameras.uk/" target="_blank" rel="noopener">trafficcameras.uk</a> mirror (unofficial re-host)',
+  },
+  {
     key: 'nsw-cctv',
     html:
       'CCTV cameras &amp; frames (New South Wales): ' +

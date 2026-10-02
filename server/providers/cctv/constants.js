@@ -201,6 +201,19 @@ export const WARENDORF_IMAGE_ORIGINS = Object.freeze([
   'http://webcam.warendorf.de/',
   'https://www.kreis-warendorf.de/',
 ]);
+/**
+ * Chichester (England): a curated harbour webcam plus one National Highways
+ * M27 camera (J12, Emsworth) re-hosted by the unofficial trafficcameras.uk
+ * mirror (license caveat on the entry).
+ */
+export const DEFAULT_CHICHESTER_SOURCE_FILE =
+  'config/cctv_sources.chichester.json';
+export const CHICHESTER_IMAGE_ORIGINS = Object.freeze([
+  'https://www.vision-environnement.com/live/image/webcam/',
+  'https://trafficcameras.uk/storage/cameras/',
+]);
+export const CHICHESTER_CENTER = { lat: 50.8225, lon: -0.8347 };
+export const DEFAULT_CHICHESTER_MAX_SOURCES = 25;
 /** Live Traffic NSW (Transport for NSW): keyless public camera catalog. */
 export const NSW_CAMERAS_URL =
   'https://data.livetraffic.com/cameras/traffic-cam.json';

@@ -45,6 +45,10 @@ import {
   TARKTEE_ANCHORS,
   DEFAULT_WARENDORF_SOURCE_FILE,
   WARENDORF_IMAGE_ORIGINS,
+  DEFAULT_CHICHESTER_SOURCE_FILE,
+  CHICHESTER_IMAGE_ORIGINS,
+  CHICHESTER_CENTER,
+  DEFAULT_CHICHESTER_MAX_SOURCES,
   NSW_CAMERAS_URL,
   NSW_IMAGE_ORIGIN,
   DEFAULT_NSW_MAX_SOURCES,
@@ -1289,6 +1293,77 @@ export function loadWarendorfSourcesFromCatalog({
   }
   console.log('[CCTV] Loaded Warendorf camera sources:', cameras.length);
   return cameras;
+}
+
+/**
+ * Load the Chichester (England) webcams from the curated catalog file: the
+ * independent harbour webcam and one National Highways M27 camera (J12,
+ * Emsworth) re-hosted by the unofficial trafficcameras.uk mirror (license
+ * caveat on that entry). Poses are curated; only the two registered image
+ * hosts are proxied.
+ *
+ * @returns {Array<object>} Normalized camera source objects.
+ */
+export function loadChichesterSourcesFromCatalog({
+  sourceRoot = process.cwd(),
+} = {}) {
+  const sourceFile =
+    process.env.CCTV_CHICHESTER_SOURCES_FILE || DEFAULT_CHICHESTER_SOURCE_FILE;
+  const resolved = path.isAbsolute(sourceFile)
+    ? sourceFile
+    : path.resolve(sourceRoot, sourceFile);
+  let rows = [];
+  try {
+    if (!fs.existsSync(resolved)) {
+      console.warn('[CCTV] Chichester source file missing:', resolved);
+      return [];
+    }
+    const parsed = JSON.parse(fs.readFileSync(resolved, 'utf8'));
+    rows = Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.warn(
+      '[CCTV] Chichester source file read error:',
+      error?.message || error,
+    );
+    return [];
+  }
+  const maxCount = Number(
+    process.env.CCTV_CHICHESTER_MAX_SOURCES || DEFAULT_CHICHESTER_MAX_SOURCES,
+  );
+  const cameras = [];
+  for (const item of rows) {
+    if (!item || typeof item !== 'object') continue;
+    const id = typeof item.id === 'string' ? item.id.trim() : '';
+    const url =
+      typeof item.url === 'string'
+        ? item.url.trim()
+        : typeof item.snapshotUrl === 'string'
+          ? item.snapshotUrl.trim()
+          : '';
+    if (!id || !CHICHESTER_IMAGE_ORIGINS.some((o) => url.startsWith(o)))
+      continue;
+    const lat = typeof item.lat === 'number' ? item.lat : NaN;
+    const lon = typeof item.lon === 'number' ? item.lon : NaN;
+    if (!isPlausibleLatLon(lat, lon)) continue;
+    cameras.push({
+      ...item,
+      id,
+      url,
+      snapshotUrl: url,
+      cityId: String(item.cityId || 'chichester'),
+      feedType:
+        typeof item.feedType === 'string' && item.feedType
+          ? item.feedType
+          : 'image',
+      sourceKind:
+        typeof item.sourceKind === 'string' && item.sourceKind
+          ? item.sourceKind
+          : 'independent-webcam',
+    });
+  }
+  const prioritized = prioritizeSources(cameras, maxCount, [CHICHESTER_CENTER]);
+  console.log('[CCTV] Loaded Chichester camera sources:', prioritized.length);
+  return prioritized;
 }
 
 /**
