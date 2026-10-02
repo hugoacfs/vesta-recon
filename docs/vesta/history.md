@@ -47,9 +47,17 @@ God's Eye View was set up on vesta by an earlier session (container `gods-eye-vi
   agents.
 - This documentation (`docs/vesta/`).
 
+## 2026-10-02 — draft: the typed box through Vesta
+
+- `eb00006` — with `?vesta-text`, the box talks to Vesta through a text-only call to vesta-voice
+  (staging `4168b2a`, `9f1cf09`), so typing reaches her memory and web search too; the call opens when
+  the box is focused. Regressions checked on vesta-voice staging (normal and globe voice calls).
+- Found: the long globe prompt leaves the model server's cache within minutes when other work runs,
+  so a first question can wait about 12 s; opening the call on focus hides most of it.
+
 ## Open
 
-- The typed box with memory and web search, like voice.
+- The draft typed box through Vesta: Hugo's verdict, then production (vesta-voice and this page).
 - Drawn-outline map events for voice.
 - The phone layout: upstream's overlapping HUD readouts, the typed box under the CONTEXT panel.
 - A staging instance of vesta recon at go-live.

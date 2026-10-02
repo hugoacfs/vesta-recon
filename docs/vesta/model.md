@@ -57,7 +57,33 @@ until Qwen answers in words.
   control, the map credits, which must stay readable, and the HUD's bottom readouts), measured again
   every second as tiles load and panels change; hidden in clean view and while recording.
 
-The typed agent has the map tools only; memory and web search are on voice calls.
+The typed agent has the map tools only; memory and web search are on voice calls, and on the
+draft below.
+
+## Draft: the box through Vesta
+
+Hugo, 2026-10-02: the box should reach the same Vesta as a voice call, memory and web search included
+("Do option 2 as a draft for now - I want to see no regressions affecting vesta voice you know, you can
+have staging"). With `VITE_VESTA_TEXT_OFFER_URL` set (vesta-voice **staging**,
+`https://vesta.tail22b555.ts.net/voice-staging/api/offer`) and **`?vesta-text` in the address**
+(`https://vesta.tail22b555.ts.net:8600/?vesta-text`), the box says "Ask Vesta… (draft: through
+vesta-voice)" and `src/vesta/textSession.js` replaces its own agent:
+
+- a text-only globe call to vesta-voice, `requestData: {"profile": "globe", "text": true}`: no
+  microphone (never asked for), nothing spoken;
+- each question goes as `send-text` with `audio_response: false`; her reply shows as it streams
+  (`bot-llm-text`);
+- her map tools come as `tool-call` messages and run here, as on a voice call; memory and web search run
+  on the service;
+- a turn ends once the model has stopped and nothing follows for 1.8 s (a tool call can be announced just
+  after a reply ends, and the follow-through net runs the model again 1.5 s after a reply that promised an
+  action without one);
+- the call opens when the box is focused, so the long globe prompt is read while Hugo types, and it
+  stays open between questions (she keeps the conversation), opened again if it ended.
+
+Measured 2026-10-02 in a browser: "Fly to Paris." flew there and answered in 5.4 s; a memory question
+answered in 6.8 s; no microphone request. On staging the memory is the staging memory server. Without
+the flag the box is the map-only agent above, unchanged.
 
 ## The routing check
 

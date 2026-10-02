@@ -12,7 +12,9 @@ vesta's own model (Qwen through LiteLLM) and voice (vesta-voice), in the Vesta l
   globe's 30 map tools, and has Hugo's memory and web search as on any call with her (never the house).
   → [voice](docs/vesta/voice.md)
 - **Qwen on the box.** "Ask vesta recon", a typed command box above the dock, and the HUD's five-word
-  summary, both through vesta's LiteLLM gateway with thinking off. → [model](docs/vesta/model.md)
+  summary, both through vesta's LiteLLM gateway with thinking off. A draft (2026-10-02, on vesta-voice
+  staging, with `?vesta-text` in the address) sends the box through Vesta instead, so typing gets her
+  memory and web search too. → [model](docs/vesta/model.md)
 - **The Vesta look.** The hearth and the "vesta recon" wordmark, ember on the Vesta ground, Space
   Grotesk, a link home and the credit to God's Eye View. The palette is a build step, so no upstream
   stylesheet is edited, and upstream's cyber skin keeps its own look. → [look](docs/vesta/look.md)

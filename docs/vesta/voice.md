@@ -139,6 +139,13 @@ vesta-voice's staging instance keeps the globe profile too, for trying changes: 
 staging, set `VITE_VESTA_VOICE_OFFER_URL` to `https://vesta.tail22b555.ts.net/voice-staging/api/offer`
 and `docker compose up -d` (the backup `.env.bak-before-voice-prod-*` beside `.env` has it).
 
+## Text-only calls (a draft)
+
+The same globe profile also answers a **text-only** call, `"text": true` beside the profile (vesta-voice
+staging only, 2026-10-02): no microphone, no hold sound, nothing spoken; the replies come back as text.
+The typed box uses it when the page is opened with `?vesta-text` ([model.md](model.md)). Every other call
+takes the path it took before; checked with a normal call and a globe voice call on staging.
+
 ## Known limits
 
 - Drawn-outline map events are not sent to voice (see above).

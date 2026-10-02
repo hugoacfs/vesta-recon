@@ -46,6 +46,7 @@ build; server-side keys are read at runtime. Then push: `git push origin vesta`.
 | `VITE_AIS_LIVE_API_URL`, `VITE_AIS_LIVE_MAX_ROWS`, `VITE_AIS_LIVE_LABEL_MAX_ROWS` | page | upstream's live-ships layer settings (see upstream's `docs/CURRENT-STATE.md`) |
 | `VESTA_LLM_BASE_URL`, `VESTA_LLM_API_KEY`, `VESTA_LLM_MODEL` | server | vesta's gateway ([model.md](model.md)) |
 | `VITE_VESTA_VOICE_OFFER_URL` | page | vesta-voice's offer URL; unset = upstream's own voice ([voice.md](voice.md)) |
+| `VITE_VESTA_TEXT_OFFER_URL` | page | the draft: the typed box through Vesta, on with `?vesta-text` in the address; now vesta-voice staging ([model.md](model.md)) |
 
 **Setting a key**, typed hidden, never on screen or in history:
 
