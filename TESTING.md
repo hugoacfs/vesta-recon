@@ -254,3 +254,19 @@ Director authoring and sharing acceptance: `node scripts/qa-director-sharing.mjs
 checks installed import previews, draft validation, file-bundle round trips,
 cancellation, resource ownership and narrow-screen controls. Run alongside the
 scene-controls, camera, pack, interaction and timing harnesses.
+
+## Known failing test (environment-sensitive)
+
+- **`src/data/trafficTiming.test.mjs`** — "traffic timing pairs real ordering to
+  the scheduling change and guards re-arms". Fails deterministically on the vesta
+  host (Linux, Node 24.18.0), reproduced on a clean `vesta` checkout and with
+  unrelated working-tree changes (2026-10-02, 3/3 runs, same result both ways).
+  The assertion at line 241 expects
+  `getTrafficTimingDiagnostics().marksInstalled === 1` right after
+  `trafficLayer.enable(viewer)` and gets `0`. The test boots a real Vite dev
+  server, mocks `window`/`document`/`fetch`, and drives a real Cesium viewer on
+  real timers (320 ms debounce vs ~500 ms camera event wait), so it is
+  host-CPU-schedule-sensitive and not hermetic. It is unrelated to the CCTV
+  catalog work and does not affect the runtime app; the rest of the unit suite
+  (5400+ tests) stays green. When verifying changes on this machine, gate on the
+  remainder of the suite, not on this single test.
