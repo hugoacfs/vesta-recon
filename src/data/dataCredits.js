@@ -339,7 +339,15 @@ export const DATA_CREDITS = [
   },
   {
     key: 'chichester-cctv',
-    html: 'Webcam (Chichester): <a href="https://www.vision-environnement.com/" target="_blank" rel="noopener">vision-environnement</a> (courtesy); M27 camera: National Highways via the <a href="https://trafficcameras.uk/" target="_blank" rel="noopener">trafficcameras.uk</a> mirror (unofficial re-host)',
+    html: 'Webcam (Chichester harbour): <a href="https://www.vision-environnement.com/" target="_blank" rel="noopener">vision-environnement</a> (courtesy)',
+  },
+  {
+    key: 'm27-corridor-cctv',
+    html:
+      'CCTV cameras &amp; frames (M27 corridor, England): National Highways via the ' +
+      '<a href="https://trafficcameras.uk/" target="_blank" rel="noopener">trafficcameras.uk</a> mirror ' +
+      '(unofficial re-host, removed on request); camera positions from the ' +
+      '<a href="https://opendata.nationalhighways.co.uk/" target="_blank" rel="noopener">NH Open Data Network Model</a> (OGL)',
   },
   {
     key: 'nsw-cctv',

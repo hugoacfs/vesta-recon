@@ -202,18 +202,37 @@ export const WARENDORF_IMAGE_ORIGINS = Object.freeze([
   'https://www.kreis-warendorf.de/',
 ]);
 /**
- * Chichester (England): a curated harbour webcam plus one National Highways
- * M27 camera (J12, Emsworth) re-hosted by the unofficial trafficcameras.uk
- * mirror (license caveat on the entry).
+ * Chichester (England): the curated harbour webcam. (The single National
+ * Highways M27 camera that used to live here moved to the M27 corridor pack,
+ * which owns the trafficcameras.uk mirror now.)
  */
 export const DEFAULT_CHICHESTER_SOURCE_FILE =
   'config/cctv_sources.chichester.json';
 export const CHICHESTER_IMAGE_ORIGINS = Object.freeze([
   'https://www.vision-environnement.com/live/image/webcam/',
-  'https://trafficcameras.uk/storage/cameras/',
 ]);
 export const CHICHESTER_CENTER = { lat: 50.8225, lon: -0.8347 };
 export const DEFAULT_CHICHESTER_MAX_SOURCES = 25;
+/**
+ * M27 corridor (England): the National Highways "M27" motorway — public
+ * numbering J1 (Ringwood end) to J12 (A27/M275 Hilsea interchange, Portsmouth
+ * end; "M271" on some maps) — plus the M3 western stub at the M27 x M3
+ * junction. 76 still-frame cameras re-hosted by the unofficial
+ * trafficcameras.uk mirror (license caveat on every entry). NH publishes no
+ * per-camera coordinates, so each position is the centroid of the NH Open
+ * Data Network Model junction-node cluster the camera serves (between-junction
+ * cameras sit at the midpoint of the two junction centroids; the two M275
+ * cameras at the Portsmouth-end interchange sit at the M27 J12 cluster).
+ * Frames refresh roughly daily; offline cameras serve NH's "CAMERA
+ * UNAVAILABLE" placeholder.
+ */
+export const DEFAULT_M27_CORRIDOR_SOURCE_FILE =
+  'config/cctv_sources.m27corridor.json';
+export const M27_CORRIDOR_IMAGE_ORIGINS = Object.freeze([
+  'https://trafficcameras.uk/storage/cameras/',
+]);
+export const M27_CORRIDOR_CENTER = { lat: 50.92, lon: -1.33 };
+export const DEFAULT_M27_CORRIDOR_MAX_SOURCES = 100;
 /** Live Traffic NSW (Transport for NSW): keyless public camera catalog. */
 export const NSW_CAMERAS_URL =
   'https://data.livetraffic.com/cameras/traffic-cam.json';

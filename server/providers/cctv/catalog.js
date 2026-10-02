@@ -16,6 +16,7 @@ import {
   loadTarkteeSourcesFromDatex,
   loadWarendorfSourcesFromCatalog,
   loadChichesterSourcesFromCatalog,
+  loadM27CorridorSourcesFromCatalog,
   loadNswSourcesFromOpenData,
   loadCalgarySourcesFromOpenData,
   loadDelDOTSourcesFromOpenData,
@@ -82,6 +83,11 @@ const LIVE_PACKS = [
     name: 'chichester',
     enabled: () => envEnabled('CCTV_CHICHESTER_ENABLED'),
     load: loadChichesterSourcesFromCatalog,
+  },
+  {
+    name: 'm27-corridor',
+    enabled: () => envEnabled('CCTV_M27_CORRIDOR_ENABLED'),
+    load: loadM27CorridorSourcesFromCatalog,
   },
   {
     name: 'nsw',

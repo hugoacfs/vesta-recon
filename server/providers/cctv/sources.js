@@ -49,6 +49,10 @@ import {
   CHICHESTER_IMAGE_ORIGINS,
   CHICHESTER_CENTER,
   DEFAULT_CHICHESTER_MAX_SOURCES,
+  DEFAULT_M27_CORRIDOR_SOURCE_FILE,
+  M27_CORRIDOR_IMAGE_ORIGINS,
+  M27_CORRIDOR_CENTER,
+  DEFAULT_M27_CORRIDOR_MAX_SOURCES,
   NSW_CAMERAS_URL,
   NSW_IMAGE_ORIGIN,
   DEFAULT_NSW_MAX_SOURCES,
@@ -1363,6 +1367,84 @@ export function loadChichesterSourcesFromCatalog({
   }
   const prioritized = prioritizeSources(cameras, maxCount, [CHICHESTER_CENTER]);
   console.log('[CCTV] Loaded Chichester camera sources:', prioritized.length);
+  return prioritized;
+}
+
+/**
+ * Load the M27 corridor (England) National Highways cameras from the curated
+ * catalog file: the NH "M27" motorway (public numbering J1 Ringwood end to
+ * J12 A27/M275 Hilsea interchange, Portsmouth end) plus the M3 western stub
+ * at the M27 x M3 junction, all re-hosted by the unofficial trafficcameras.uk
+ * mirror (license caveat on every entry). Poses are curated: NH publishes no
+ * per-camera coordinates, so each camera sits at the centroid of the NH Open
+ * Data Network Model junction-node cluster it serves. Still frames refresh
+ * roughly daily; offline cameras serve NH's "CAMERA UNAVAILABLE" placeholder.
+ *
+ * @returns {Array<object>} Normalized camera source objects.
+ */
+export function loadM27CorridorSourcesFromCatalog({
+  sourceRoot = process.cwd(),
+} = {}) {
+  const sourceFile =
+    process.env.CCTV_M27_CORRIDOR_SOURCES_FILE ||
+    DEFAULT_M27_CORRIDOR_SOURCE_FILE;
+  const resolved = path.isAbsolute(sourceFile)
+    ? sourceFile
+    : path.resolve(sourceRoot, sourceFile);
+  let rows = [];
+  try {
+    if (!fs.existsSync(resolved)) {
+      console.warn('[CCTV] M27 corridor source file missing:', resolved);
+      return [];
+    }
+    const parsed = JSON.parse(fs.readFileSync(resolved, 'utf8'));
+    rows = Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.warn(
+      '[CCTV] M27 corridor source file read error:',
+      error?.message || error,
+    );
+    return [];
+  }
+  const maxCount = Number(
+    process.env.CCTV_M27_CORRIDOR_MAX_SOURCES ||
+      DEFAULT_M27_CORRIDOR_MAX_SOURCES,
+  );
+  const cameras = [];
+  for (const item of rows) {
+    if (!item || typeof item !== 'object') continue;
+    const id = typeof item.id === 'string' ? item.id.trim() : '';
+    const url =
+      typeof item.url === 'string'
+        ? item.url.trim()
+        : typeof item.snapshotUrl === 'string'
+          ? item.snapshotUrl.trim()
+          : '';
+    if (!id || !M27_CORRIDOR_IMAGE_ORIGINS.some((o) => url.startsWith(o)))
+      continue;
+    const lat = typeof item.lat === 'number' ? item.lat : NaN;
+    const lon = typeof item.lon === 'number' ? item.lon : NaN;
+    if (!isPlausibleLatLon(lat, lon)) continue;
+    cameras.push({
+      ...item,
+      id,
+      url,
+      snapshotUrl: url,
+      cityId: String(item.cityId || 'm27-corridor'),
+      feedType:
+        typeof item.feedType === 'string' && item.feedType
+          ? item.feedType
+          : 'image',
+      sourceKind:
+        typeof item.sourceKind === 'string' && item.sourceKind
+          ? item.sourceKind
+          : 'motorway-cctv',
+    });
+  }
+  const prioritized = prioritizeSources(cameras, maxCount, [
+    M27_CORRIDOR_CENTER,
+  ]);
+  console.log('[CCTV] Loaded M27 corridor camera sources:', prioritized.length);
   return prioritized;
 }
 
