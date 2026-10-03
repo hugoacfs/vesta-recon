@@ -37,7 +37,9 @@ exists for the same client keys, then serves it with `vite preview` on port 8096
 Variables read by the page (`VITE_*`, `CESIUM_ION_TOKEN`, `GOOGLE_MAPS_API_KEY`) are baked in at that
 build; server-side keys are read at runtime.
 
-**To production, on Hugo's word** (the rule vesta-voice and the harness keep):
+**To production, on Hugo's word** (the rule vesta-voice and the harness keep). First see exactly what
+would move, `git log --oneline origin/vesta..origin/staging`: every commit listed must be approved.
+Then:
 
 ```bash
 cd /srv/ai/compose/gods-eye-view/app && git fetch origin && git merge --ff-only origin/staging

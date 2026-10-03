@@ -64,3 +64,7 @@ project, `hugoacfs/vesta-voice` (its `docs/architecture.md` describes the globe 
   pushed.
 - Work on `staging` and its instance; production (`vesta`, `:8600`) moves on Hugo's word. vesta-voice
   keeps the same rule.
+- `vesta` marks what production runs. It moves only in a promotion, by fast-forward to the approved
+  commits; docs commits go to `staging` like everything else, and the production checkout stays on the
+  deployed commit (the harness learned this on 2026-10-03). Before any push to `vesta`,
+  `git log --oneline origin/vesta..<commit>` lists exactly what would move.
