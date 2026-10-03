@@ -24,6 +24,10 @@ microphone without third-party code.
  the map runner: upstream's 30 map actions, run in the page
 ```
 
+Staging (since 2026-10-03) is the same picture on `:8601` → `127.0.0.1:8196` (container
+`gods-eye-view-staging`, branch `staging`), calling vesta-voice staging, which reads its globe brief
+from staging. → [operations](operations.md)
+
 ## The map runner: one way to drive the globe
 
 Upstream's voice agent drives the globe through 30 map actions (fly to a place, show a layer, follow an

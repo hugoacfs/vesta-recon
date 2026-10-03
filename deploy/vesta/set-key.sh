@@ -3,6 +3,7 @@
 # The value is read hidden and handed to Python on stdin: it never appears on screen,
 # in shell history, in `ps`, or in any chat. Usage (from your Mac):
 #   ssh -t vesta /srv/ai/compose/gods-eye-view/set-key.sh CESIUM_ION_TOKEN
+# The staging instance has its own copy and .env: /srv/ai/compose/gods-eye-view-staging/set-key.sh
 # Keys typed into the app's own POWER UP panel would land inside the container and be lost
 # on the next update, so keys live here instead (the container reads this .env at start).
 set -euo pipefail
@@ -29,4 +30,4 @@ echo "$k saved. Applying (a browser-side key also rebuilds the page bundle, abou
 docker compose up -d
 echo "Configured providers now:"
 sleep 5
-docker exec gods-eye-view npm run --silent doctor 2>/dev/null | sed -n '/Configured providers:/,/^$/p'
+docker compose exec -T gods-eye-view npm run --silent doctor 2>/dev/null | sed -n '/Configured providers:/,/^$/p'

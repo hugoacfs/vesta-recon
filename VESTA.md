@@ -25,15 +25,20 @@ vesta's own model (Qwen through LiteLLM) and voice (vesta-voice), in the Vesta l
 
 `https://vesta.tail22b555.ts.net:8600/` on the tailnet (Tailscale Serve → `127.0.0.1:8096`), container
 `gods-eye-view`, compose project `/srv/ai/compose/gods-eye-view`, whose `app/` is this repository. The
-vesta home page lists it as **Vesta Recon** among the agents. → [operations](docs/vesta/operations.md)
+vesta home page lists it as **Vesta Recon** among the agents. Staging, since 2026-10-03:
+`https://vesta.tail22b555.ts.net:8601/` (`127.0.0.1:8196`, container `gods-eye-view-staging`,
+`/srv/ai/compose/gods-eye-view-staging`, branch `staging`). → [operations](docs/vesta/operations.md)
 
 ## Branches
 
 - `main` mirrors upstream; update it with GitHub's **Sync fork**.
-- `vesta` is the fork and what runs on vesta. Upstream updates: merge `main` into `vesta`.
-  → [upstream](docs/vesta/upstream.md)
-- One instance until it goes live (Hugo, 2026-09-30); a staging instance comes then. Voice uses
-  vesta-voice's production instance since 2026-10-01 (its tag `stable-2026-10-01-globe`).
+- `staging` is where work happens: commit there, deploy the staging instance (`:8601`), check it.
+- `vesta` is production, what runs on `:8600`, and GitHub's default branch. It moves on Hugo's word,
+  by merging `staging` into it, as for vesta-voice and the harness. Upstream updates take the same
+  road: `main` into `staging`, then on to `vesta`. → [upstream](docs/vesta/upstream.md)
+- Voice: production calls vesta-voice's production instance (since 2026-10-01, its tag
+  `stable-2026-10-01-globe`); staging calls vesta-voice's staging instance, which reads its globe
+  brief from this staging instance.
 
 ## Documentation
 
@@ -43,7 +48,7 @@ vesta home page lists it as **Vesta Recon** among the agents. → [operations](d
 | [docs/vesta/voice.md](docs/vesta/voice.md) | voice through vesta-voice: the globe profile, the tool bridge, the microphone, tests, figures |
 | [docs/vesta/model.md](docs/vesta/model.md) | Qwen on the box: the gateway key, HUD summaries, the typed agent, the routing check |
 | [docs/vesta/look.md](docs/vesta/look.md) | the name, the palette step, the tokens, the fonts, how to tune them |
-| [docs/vesta/operations.md](docs/vesta/operations.md) | deploy, configuration, keys, checks, screenshots, rollback, troubleshooting |
+| [docs/vesta/operations.md](docs/vesta/operations.md) | the two instances, deploy (staging, then production), configuration, keys, checks, screenshots, rollback, troubleshooting |
 | [docs/vesta/upstream.md](docs/vesta/upstream.md) | taking upstream updates, and every upstream file the fork touches |
 | [docs/vesta/history.md](docs/vesta/history.md) | what was done, when, with the commits |
 
@@ -57,4 +62,5 @@ project, `hugoacfs/vesta-voice` (its `docs/architecture.md` describes the globe 
 - The LICENSE and the credit to Bilawal Sidhu stay; the title bar carries the credit too.
 - A change is committed, rebuilt, checked (tests, format, boundaries, build, a look in a browser) and
   pushed.
-- vesta-voice moves on its own rules: work on its staging; production on Hugo's word.
+- Work on `staging` and its instance; production (`vesta`, `:8600`) moves on Hugo's word. vesta-voice
+  keeps the same rule.

@@ -1,21 +1,23 @@
 # Upstream: taking God's Eye View updates
 
-`main` mirrors `bilawalsidhu/gods-eye-view`; `vesta` is the fork. Upstream moves fast, so the fork keeps
+`main` mirrors `bilawalsidhu/gods-eye-view`; the fork is worked on in `staging`, and `vesta` is
+production. Upstream moves fast, so the fork keeps
 its changes in new files and small seams. This page lists every upstream file the fork touches and what
 to do when a merge meets it.
 
 ## How
 
-1. Bring `main` up to date: GitHub's **Sync fork** on `hugoacfs/vesta-recon`, or in the checkout
+1. Bring `main` up to date: GitHub's **Sync fork** on `hugoacfs/vesta-recon`, or in a checkout
    `git fetch upstream && git push origin upstream/main:main`.
-2. On vesta, in `/srv/ai/compose/gods-eye-view/app` on branch `vesta`:
-   `git fetch origin && git merge origin/main`.
+2. On vesta, in the staging checkout `/srv/ai/compose/gods-eye-view-staging/app` on branch
+   `staging`: `git fetch origin && git merge origin/main`.
 3. Resolve conflicts with the table below; keep both sides wherever both added something.
 4. If `package-lock.json` changed: rebuild the image (`docker compose build`) before the checks.
 5. Run the checks ([operations.md](operations.md)), take screenshots (`scripts/vesta-shoot.mjs`), make
-   a voice call and a typed command, run the routing check if upstream changed its voice instructions or
-   tools.
-6. Deploy and push `vesta`.
+   a voice call and a typed command on staging (`:8601`), run the routing check if upstream changed its
+   voice instructions or tools.
+6. Deploy staging and push `staging`.
+7. On Hugo's word, production: `staging` into `vesta` ([operations.md](operations.md#deploy-a-change)).
 
 ## Upstream files the fork changes
 
@@ -34,6 +36,7 @@ to do when a merge meets it.
 | `src/ui/templates/hud-loading.html` | the loading screen: hearth and wordmark | keep the fork's |
 | `src/ui/templates/welcome.html` | the first-run tip | keep the fork's sentence |
 | `src/voice/control.js` | "vesta" for "AI AGENT" | keep the fork's word |
+| `.env.example`, `README.md`, `DATA_SOURCES.md`, `TESTING.md`, `scripts/format-scope.json`, `server/providers/cctv/catalog.js`, `constants.js`, `sources.js`, `src/data/dataCredits.js` | the CCTV packs of 2026-10-02 (Chichester and the M27 corridor, `a38c13f` and `7b43722`, from another session; `6cdd6e4` a note in `TESTING.md`): their gates, sources, credits and notes | keep both sides; the packs' own files are new (`config/cctv_sources.*.json`, `src/data/cctv*.test.mjs`, `docs/future-cctv-candidates.md`) |
 | `style.css` | imports of `vesta-fonts.css`, `vesta-theme.css`, `vesta-ask.css`, before `cyber.css` | keep both; `cyber.css` stays last (a test checks it) |
 
 Everything else the fork has is new files: `VESTA.md`, `docs/vesta/`, `deploy/vesta/`, `build/vesta-palette.mjs`,
@@ -58,4 +61,5 @@ Everything else the fork has is new files: `VESTA.md`, `docs/vesta/`, `deploy/ve
 - The voice instructions changed: the brief drops lines that mention screenshots and the line that
   starts "You are GEV Voice Control"; check `vestaVoiceInstructions()` still reads well
   (`GET /api/vesta/voice-brief`).
-- Upstream's own README, docs and changelog need no merge care: the fork does not change them.
+- Upstream's changelog and its other docs need no merge care; its `README.md`, `DATA_SOURCES.md` and
+  `TESTING.md` carry the CCTV packs' lines (above).
