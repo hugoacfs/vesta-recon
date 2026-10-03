@@ -18,7 +18,7 @@ mountAskVestaRecon({
   // A draft (2026-10-02): with ?vesta-text in the address, the box talks to Vesta through vesta-voice.
   textOfferUrl: import.meta.env.VITE_VESTA_TEXT_OFFER_URL,
 });
-mountVestaBrand();
+mountVestaBrand({ env: import.meta.env.VITE_VESTA_ENV });
 
 application.start().catch((error) => {
   console.error("God's Eye View initialization failed:", error);

@@ -72,6 +72,21 @@
   animation: vesta-caret-blink 1.15s steps(2) infinite;
 }
 
+/* A named instance (staging) says so beside the wordmark (src/vesta/brand.js). */
+.vesta-wordmark .vesta-env {
+  margin-left: 0.55em;
+  padding: 0.18em 0.6em;
+  border: 1px solid rgba(255, 196, 107, 0.55);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.34em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  -webkit-text-fill-color: var(--vesta-ember-1);
+}
+
 @keyframes vesta-caret-blink {
   50% {
     opacity: 0.2;
