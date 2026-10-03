@@ -66,7 +66,7 @@ Hugo, 2026-10-02: the box should reach the same Vesta as a voice call, memory an
 ("Do option 2 as a draft for now - I want to see no regressions affecting vesta voice you know, you can
 have staging"). With `VITE_VESTA_TEXT_OFFER_URL` set (vesta-voice **staging**,
 `https://vesta.tail22b555.ts.net/voice-staging/api/offer`) and **`?vesta-text` in the address**
-(`https://vesta.tail22b555.ts.net:8600/?vesta-text`), the box says "Ask Vesta… (draft: through
+(`https://vesta.tail22b555.ts.net:8600/?vesta-text`, or `:8601/?vesta-text` on staging), the box says "Ask Vesta… (draft: through
 vesta-voice)" and `src/vesta/textSession.js` replaces its own agent:
 
 - a text-only globe call to vesta-voice, `requestData: {"profile": "globe", "text": true}`: no
@@ -83,7 +83,10 @@ vesta-voice)" and `src/vesta/textSession.js` replaces its own agent:
 
 Measured 2026-10-02 in a browser: "Fly to Paris." flew there and answered in 5.4 s; a memory question
 answered in 6.8 s; no microphone request. On staging the memory is the staging memory server. Without
-the flag the box is the map-only agent above, unchanged.
+the flag the box is the map-only agent above, unchanged. Since 2026-10-03 vesta-voice staging reads the
+globe brief from this app's staging instance, so the draft on production gets staging's map tools: the
+same while both branches carry the same ones. On staging itself, 2026-10-03: "Fly to Paris." flew
+there, a memory question answered in 7.4 s.
 
 ## The routing check
 

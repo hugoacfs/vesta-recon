@@ -72,7 +72,7 @@ Lives in the `hugoacfs/vesta-voice` repository (branch `staging`), documented in
 
 | | |
 |---|---|
-| Switch | `VESTA_VOICE_GLOBE_BRIEF_URL` in the instance's `.env` (staging: `http://127.0.0.1:8096/api/vesta/voice-brief`); unset, or the brief unreachable, and a globe call is refused rather than answered as a normal call |
+| Switch | `VESTA_VOICE_GLOBE_BRIEF_URL` in the instance's `.env` (production: `http://127.0.0.1:8096/api/vesta/voice-brief`; staging, since 2026-10-03: `http://127.0.0.1:8196/api/vesta/voice-brief`, this app's staging instance); unset, or the brief unreachable, and a globe call is refused rather than answered as a normal call |
 | Brief | `brains/globe.py` checks it: tool names `^[a-z][a-z0-9_]{0,63}$`, at most 64 tools, object parameters, descriptions cut at 4,000 characters, at most 256 KB |
 | Prompt | `brains/globe.md` (Vesta's identity and way of speaking, the map, memory, search and the clock) followed by the brief's rules; no clock line, so the prompt and the tools after it (about 12k tokens) stay cached on the model server |
 | Tools | `current_time`, the 30 map tools (bridged to the page), `memory_search`, `memory_read`, `memory_write`, `web_search`, `news_search`, `search_and_fetch`; never the house. A map tool whose name is taken by another tool is left out |
@@ -135,9 +135,14 @@ What that took:
 4. A check in a browser with a fake microphone: the globe's typed "Fly to Paris" ran against production.
 
 vesta-voice's staging instance keeps the globe profile too, for trying changes: scripted calls go there
-(never recordings against production, where the voice acts on what she hears). To point the globe back at
-staging, set `VITE_VESTA_VOICE_OFFER_URL` to `https://vesta.tail22b555.ts.net/voice-staging/api/offer`
-and `docker compose up -d` (the backup `.env.bak-before-voice-prod-*` beside `.env` has it).
+(never recordings against production, where the voice acts on what she hears). Since 2026-10-03 it
+pairs with this app's staging instance: the staging page (`:8601`) calls `/voice-staging/api/offer`,
+and voice staging reads its brief from staging (`VESTA_VOICE_GLOBE_BRIEF_URL=http://127.0.0.1:8196/api/vesta/voice-brief`
+in `/srv/ai/compose/vesta-voice-staging/.env`; backup `.env.bak-before-globe-staging-brief-20261003T181217Z`).
+A change to the map tools is tried end to end on staging while production's pair stays as it was.
+Production's page can still be pointed at voice staging (`VITE_VESTA_VOICE_OFFER_URL` =
+`https://vesta.tail22b555.ts.net/voice-staging/api/offer`, then `docker compose up -d`; the backup
+`.env.bak-before-voice-prod-*` beside `.env` has it), but it would then get staging's map tools.
 
 ## Text-only calls (a draft)
 

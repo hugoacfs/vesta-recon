@@ -55,9 +55,30 @@ God's Eye View was set up on vesta by an earlier session (container `gods-eye-vi
 - Found: the long globe prompt leaves the model server's cache within minutes when other work runs,
   so a first question can wait about 12 s; opening the call on focus hides most of it.
 
+## 2026-10-02 — CCTV packs (another session)
+
+- `a38c13f`, `7b43722` — two keyless CCTV packs, each behind its own gate: Chichester (the harbour
+  webcam) and the M27 corridor (76 National Highways cameras through the trafficcameras.uk mirror).
+- `6cdd6e4` — a note in `TESTING.md` on a timing test that fails on the vesta host itself.
+
+## 2026-10-03 — staging
+
+- A staging instance, as vesta-voice and the harness have (Hugo: "Can we now create a vesta recon
+  staging, just like we have for voice, harness and memory please"): branch `staging`,
+  `https://vesta.tail22b555.ts.net:8601/` (`127.0.0.1:8196`, container `gods-eye-view-staging`,
+  `/srv/ai/compose/gods-eye-view-staging`). It calls vesta-voice staging, whose globe brief now
+  comes from it; no AIS key (AISStream allows one connection per key); TomTom 1000 tiles a day.
+- From now on work happens on `staging`; `vesta` moves on Hugo's word.
+- Checked on `:8601`: the page and the photoreal tiles, a voice call from it ("Fly to Paris" flew
+  there), the typed box both ways (map-only, and the `?vesta-text` draft with a memory question), no
+  microphone request from the box.
+- `set-key.sh` now reports the providers of the instance it runs in (it named production's
+  container); `deploy/vesta/staging/` holds staging's compose file and teardown script.
+
 ## Open
 
 - The draft typed box through Vesta: Hugo's verdict, then production (vesta-voice and this page).
 - Drawn-outline map events for voice.
 - The phone layout: upstream's overlapping HUD readouts, the typed box under the CONTEXT panel.
-- A staging instance of vesta recon at go-live.
+- Production's `?vesta-text` draft calls vesta-voice staging, whose brief now comes from staging; the
+  draft could live on staging only.
