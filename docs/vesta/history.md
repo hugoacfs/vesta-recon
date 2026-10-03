@@ -69,6 +69,8 @@ God's Eye View was set up on vesta by an earlier session (container `gods-eye-vi
   `/srv/ai/compose/gods-eye-view-staging`). It calls vesta-voice staging, whose globe brief now
   comes from it; no AIS key (AISStream allows one connection per key); TomTom 1000 tiles a day.
 - From now on work happens on `staging`; `vesta` moves on Hugo's word.
+- `0ac0bfa` (on `staging`) — a named instance says so: `VITE_VESTA_ENV=staging` puts STAGING beside
+  the wordmark and "· staging" in the tab, as vesta-voice and the harness do.
 - Checked on `:8601`: the page and the photoreal tiles, a voice call from it ("Fly to Paris" flew
   there), the typed box both ways (map-only, and the `?vesta-text` draft with a memory question), no
   microphone request from the box.

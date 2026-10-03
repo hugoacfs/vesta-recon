@@ -29,7 +29,7 @@ to do when a merge meets it.
 | `server/providers/openai.js` | two routes, `/api/vesta/agent` and `/api/vesta/voice-brief`, and their imports | keep both |
 | `server/providers/openai/hud-summary.js` | the gateway seam: Chat Completions through `vesta-llm.js` when configured | re-apply the seam on upstream's new code |
 | `src/hud.js` | the default style's HUD colours through `var(--vr-0-255-255, …)` | keep the fork's values |
-| `src/main.js` | the typed box, the brand link, the voice option | keep both |
+| `src/main.js` | the typed box, the brand link and the instance's name, the voice option | keep both |
 | `src/overlays/worldOverlayTokens.js` | Vesta values for the label and card chrome | keep the fork's values; check upstream's new chrome colours |
 | `src/overlays/worldOverlayDraw.test.mjs` | the pinned CCTV leader colour follows the fork's value | keep the fork's value |
 | `src/ui/templates/scene-chrome.html` | the title bar: hearth, wordmark, home link and credit | keep the fork's title bar |

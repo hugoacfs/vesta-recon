@@ -65,6 +65,7 @@ first, deploy and check staging again, then promote.
 | `VESTA_LLM_BASE_URL`, `VESTA_LLM_API_KEY`, `VESTA_LLM_MODEL` | server | vesta's gateway ([model.md](model.md)) |
 | `VITE_VESTA_VOICE_OFFER_URL` | page | vesta-voice's offer URL; unset = upstream's own voice ([voice.md](voice.md)) |
 | `VITE_VESTA_TEXT_OFFER_URL` | page | the draft: the typed box through Vesta, on with `?vesta-text` in the address; now vesta-voice staging ([model.md](model.md)) |
+| `VITE_VESTA_ENV` | page | the instance's name, beside the wordmark and in the tab: `staging` on staging, unset in production ([look.md](look.md)) |
 
 **Staging's `.env`** is production's with these differences (2026-10-03):
 
@@ -72,6 +73,7 @@ first, deploy and check staging again, then promote.
   staging shows no live ships; a second free key from aisstream.io would give it some.
 - `TOMTOM_DAILY_TILE_BUDGET` 1000 (production 40000): the same TomTom key, a small share for trials.
 - `VITE_VESTA_VOICE_OFFER_URL` points at vesta-voice staging (`/voice-staging/api/offer`).
+- `VITE_VESTA_ENV=staging`: STAGING beside the wordmark, "· staging" in the tab.
 
 The rest is the same, the gateway key, Cesium ion and OpenSky included.
 

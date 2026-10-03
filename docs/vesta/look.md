@@ -15,7 +15,10 @@ text, glass surfaces, Space Grotesk for display, Inter and JetBrains Mono for th
 | First-run dialog | its tip names the microphone and Vesta (`welcome.html`) |
 | vesta's home page | the card **Vesta Recon** among the agents: home-page titles are Title Case (Hugo, 2026-10-01); the wordmark in the app keeps the lowercase brand style |
 
-`src/vesta/brand.js` points the "‹ vesta" link at the same host without the globe's port. On a phone
+`src/vesta/brand.js` points the "‹ vesta" link at the same host without the globe's port. An
+instance with a name (`VITE_VESTA_ENV`, `staging` on the staging instance; production sets none)
+shows it as a small ember pill, in capitals, between the wordmark and the caret, on the title bar and
+the loading screen, and after the title in the tab ("vesta recon · staging"). On a phone
 upstream's layout shows only the logo, so the hearth stands alone there. The hearth is
 `public/vesta/hearth.svg`, the emblem of the vesta home page.
 
